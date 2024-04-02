@@ -1,8 +1,9 @@
 import express from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/project-mongo";
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/auth";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 
@@ -20,6 +21,12 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello Technigo!");
 });
+
+app.get('/secrets'), (req, res) => {
+  res.json({
+    secret: "This is a secret"
+  })
+}
 
 // Start the server
 app.listen(port, () => {
