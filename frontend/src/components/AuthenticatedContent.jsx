@@ -1,29 +1,26 @@
-// src/components/AuthenticatedContent.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchAuthenticatedContent } from './api.js';
 
 const AuthenticatedContent = () => {
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    const fetchContent = async () => {
-      const response = await fetch('/api/authenticated-content', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setContent(data.content);
-      } else {
-        setContent('You are not authorized to view this content.');
+    const getContent = async () => {
+      try {
+        const data = await fetchAuthenticatedContent();
+        setContent(data.message);
+      } catch (error) {
+        alert('Could not fetch content: ' + error.response.data.message);
       }
     };
-
-    fetchContent();
+    getContent();
   }, []);
 
-  return <div>{content}</div>;
+  return <div className="mt-10 text-center">
+      <div className="inline-block text-lg font-medium py-4 px-6 bg-blue-100 text-blue-700 rounded">
+          {content || "Loading..."}
+      </div>
+  </div>;
 };
 
 export default AuthenticatedContent;

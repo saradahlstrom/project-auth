@@ -1,30 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from './api';
+import { register } from './api';
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const { accessToken } = await login({ email, password });
-    localStorage.setItem('token', accessToken);
-    navigate('/content');
-  } catch (error) {
-    // Enhanced error handling
-    if (error.response && error.response.data) {
-      alert('Login failed: ' + error.response.data.message);
-    } else {
-      // Handle cases where the error response is undefined
-      console.error('Error:', error.message);
-      alert('Login failed. Please try again.');
+    e.preventDefault();
+    try {
+      const response = await register({ email, password });
+      alert('Registration successful. Please log in.');
+      navigate('/'); // Assuming the login route is '/'
+    } catch (error) {
+      alert('Registration failed: ' + error.response.data.message);
     }
-  }
-};
-
+  };
 
   return (
     <div className="max-w-md mx-auto mt-10">
@@ -51,7 +43,7 @@ const LoginForm = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
-            placeholder="******************"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -62,7 +54,7 @@ const LoginForm = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Sign In
+            Register
           </button>
         </div>
       </form>
@@ -70,4 +62,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

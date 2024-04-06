@@ -1,18 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
+import asyncHandler from "express-async-handler";
 
-const connectDB = async () => {
+export const connectDB = asyncHandler(async () => {
     try {
-        await mongoose.connect(process.env.DB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
-        });
-        console.log('MongoDB Connected...');
-    } catch (err) {
-        console.error('Database connection failed. Exiting now...', err);
+        const conn = await mongoose.connect(
+            process.env.MONGO_URL
+        )
+        console.log(`Mongo DB connected: ${conn.connection.host}`)
+    } catch (error) {
+        console.log(error);
         process.exit(1);
     }
-};
-
-export default connectDB;
+})
